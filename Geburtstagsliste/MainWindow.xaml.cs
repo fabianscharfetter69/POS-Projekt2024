@@ -21,5 +21,11 @@ namespace Geburtstagsliste
         {
             InitializeComponent();
         }
+
+        private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DateTime selectedDate = Calendar.SelectedDate.GetValueOrDefault();
+            MessageBox.Show($"Selected Date: {selectedDate.ToShortDateString()}");
+        }
     }
 }

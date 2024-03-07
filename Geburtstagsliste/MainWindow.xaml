@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Geburtstagsliste"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="GeburtstagsListe" Height="450" Width="500" Icon="/calenderIcon.png" >
     <Grid>
+        <StackPanel>
+            <Label HorizontalAlignment="Center" Margin="20">Geburtstagsliste</Label>
+            <StackPanel Orientation="Horizontal">
+                <Calendar x:Name="Calendar" Margin="15" DisplayMode="Month" SelectionMode="SingleDate" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
 
+            </StackPanel>
+
+
+        </StackPanel>
     </Grid>
 </Window>

@@ -7,4 +7,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="calenderIcon.jpeg" />
+    <None Remove="calenderIcon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="calenderIcon.jpeg" />
+    <Resource Include="calenderIcon.png" />
+  </ItemGroup>
+
 </Project>
