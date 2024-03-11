@@ -5,30 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Geburtstagsliste"
         mc:Ignorable="d"
-        Title="GeburtstagsListe" Height="450" Width="450" Icon="/calenderIcon.png" >
+        Title="GeburtstagsListe" Height="450" Width="700" Icon="/calenderIcon.png" >
     <Grid>
         <StackPanel>
             
-            <Label HorizontalAlignment="Center" Margin="20">Geburtstagsliste</Label>
+            <Label HorizontalAlignment="Center" Margin="20" FontWeight="Bold" FontSize="20">Geburtstagsliste</Label>
             
+            <Button x:Name="buttonLaden" Click="buttonLaden_Click" Margin="100,0,100,15">Daten laden</Button>
+
             <StackPanel Orientation="Horizontal">
+                
                 
                 <Calendar x:Name="Calendar" Margin="15" DisplayMode="Month" SelectionMode="SingleDate" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
                 
                 <StackPanel Orientation="Vertical" Margin="15">
-                    <TextBlock x:Name="textBlockTag" HorizontalAlignment="Left" Margin="0,0,0,10" Text="Tag im Kalender auswählen"></TextBlock>
+                    <TextBlock x:Name="textBlockTag" MinWidth="170" HorizontalAlignment="Left" Margin="0,0,0,10" Text="Tag im Kalender auswählen" FontWeight="Bold"></TextBlock>
                     <Label x:Name="labelName" Visibility="Hidden" HorizontalAlignment="Left">Name eingeben:</Label>
-                    <TextBox x:Name="textBoxName" Visibility="Hidden" HorizontalAlignment="Left" Width="120" Margin="0,0,0,10"></TextBox>
+                    <TextBox x:Name="textBoxName" Visibility="Hidden" HorizontalAlignment="Left" Width="170" Margin="0,0,0,10"></TextBox>
                     
                     <StackPanel Orientation="Horizontal">
                         <Label x:Name="labelGeburtsjahr" Visibility="Hidden" HorizontalAlignment="Left">Geburtsjahr hinzufügen?</Label>
                         <CheckBox x:Name="checkBoxGeburtsjahr" Unchecked="checkBoxGeburtsjahr_Unchecked" Checked="checkBoxGeburtsjahr_Checked" Visibility="Hidden" HorizontalAlignment="Left" Margin="0,6,0,0"></CheckBox>
                     </StackPanel>
-                    <ComboBox x:Name="comboBoxGeburtsjahr" Visibility="Hidden" HorizontalAlignment="Left" Width="120" Margin="0,0,0,10"></ComboBox>
-                    <Button x:Name="buttonName" Click="buttonName_Click" HorizontalAlignment="Center" Visibility="Hidden" Width="120" Margin="10">Hinzufügen</Button>
+                    <ComboBox x:Name="comboBoxGeburtsjahr" Visibility="Hidden" HorizontalAlignment="Left" Width="170" Margin="0,0,0,10"></ComboBox>
+                    <Button x:Name="buttonName" Click="buttonName_Click" HorizontalAlignment="Left" Visibility="Hidden" Width="170" Margin="10">Hinzufügen</Button>
                 </StackPanel>
+
+                <ListView x:Name="listView" MinWidth="200" Margin="15,0,0,0"/>
+
+
             </StackPanel>
 
+            <Button x:Name="buttonSpeichern" Click="buttonSpeichern_Click" Margin="100,15,100,0">Daten speichern</Button>
 
         </StackPanel>
     </Grid>

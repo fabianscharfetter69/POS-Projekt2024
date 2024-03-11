@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,15 +31,18 @@ namespace Geburtstagsliste
 
         public String ToString()
         {
+           
             if(year is null)
             {
-                return $"{name} hat am {day}.{month}. Geburtstag.";
+                return $"{day}.{month}.\t{name}";
 
             }
             else
             {
-                return $"{name} hat am {day}.{month}.{year} Geburtstag.";
+                return $"{day}.{month}.\t{name}, {year}";
             }
         }
+
+        
     }
 }

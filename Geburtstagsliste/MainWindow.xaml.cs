@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,18 +28,71 @@ namespace Geburtstagsliste
         {
             InitializeComponent();
 
-            ObservableCollection<string> Years = new ObservableCollection<string>();
+            loadData();
+
 
             // Fülle die ComboBox mit den Jahren von 1900 bis zum aktuellen Jahr
+            ObservableCollection<string> Years = new ObservableCollection<string>();
             int currentYear = DateTime.Now.Year;
-            for (int year = 1900; year <= currentYear; year++)
+            for (int year = currentYear; year >= 1900; year--)
             {
                 Years.Add(year.ToString());
             }
-
-            // Setze die Datenquelle für die ComboBox
             comboBoxGeburtsjahr.ItemsSource = Years;
         }
+
+        //Daten vom Server laden
+        public async Task loadData()
+        {
+            try
+            {
+                // HTTP-Client erstellen
+                using (var httpClient = new HttpClient())
+                {
+                    string serverUrl = "http://localhost:8080/geburtstage";
+                    HttpResponseMessage response = await httpClient.GetAsync(serverUrl);
+                    response.EnsureSuccessStatusCode();
+                    string json = await response.Content.ReadAsStringAsync();
+
+                    // JSON-String deserialisieren und in eine ObservableCollection einlesen
+                    ObservableCollection<Geburtstag> geburtstage = JsonSerializer.Deserialize<ObservableCollection<Geburtstag>>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fehler beim Abrufen der Daten: {ex.Message}");
+                MessageBox.Show($"Fehler beim Abrufen der Daten: {ex.Message}");
+            }
+
+            List<String> strings = listToString();
+            listView.ItemsSource = strings;
+        }
+
+        //Daten an den Server schicken
+        static async Task SendGeburtstageAsync(ObservableCollection<Geburtstag> geburtstage)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string serverUrl = "http://localhost:8080/geburtstage";
+                    string json = JsonSerializer.Serialize(geburtstage);
+                    var content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
+                    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    HttpResponseMessage response = await httpClient.PostAsync(serverUrl, content);
+
+                    response.EnsureSuccessStatusCode();
+
+                    Trace.WriteLine("Daten erfolgreich an den Server gesendet.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine($"Fehler beim Senden der Daten an den Server: {ex.Message}");
+                MessageBox.Show($"Fehler beim Senden der Daten an den Server: {ex.Message}");
+            }
+        }
+
 
         private void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -98,6 +155,10 @@ namespace Geburtstagsliste
                     MessageBox.Show($"<{geb.ToString()}> wurde erfolgreich hinzugefügt.");
                 }
             }
+
+            List<String> strings = listToString();
+            listView.ItemsSource = strings;
+            textBoxName.Text = null;
         }
 
         private void checkBoxGeburtsjahr_Checked(object sender, RoutedEventArgs e)
@@ -110,20 +171,32 @@ namespace Geburtstagsliste
             comboBoxGeburtsjahr.Visibility = Visibility.Hidden;
         }
 
-        public string listToString()
+        public List<String> listToString()
         {
-            string s = "Januar:\n";
-            //Jänner hinzufügen
-            string month = "01";
+            List<String> strings = new List<String>();
+            geburtstagsliste = SortByDate(geburtstagsliste);
+
             foreach(Geburtstag geb in geburtstagsliste)
             {
-                if(geb.month == month)
-                {
-
-                }
+                strings.Add(geb.ToString());
             }
 
-            return s;
+            return strings;
+        }
+
+        private static ObservableCollection<Geburtstag> SortByDate(ObservableCollection<Geburtstag> geburtstagsliste)
+        {
+            return new ObservableCollection<Geburtstag>(geburtstagsliste.OrderBy(g => g.month).ThenBy(g => g.day));
+        }
+
+        private void buttonLaden_Click(object sender, RoutedEventArgs e)
+        {
+            loadData();
+        }
+
+        private void buttonSpeichern_Click(object sender, RoutedEventArgs e)
+        {
+            SendGeburtstageAsync(geburtstagsliste);
         }
     }
 }
