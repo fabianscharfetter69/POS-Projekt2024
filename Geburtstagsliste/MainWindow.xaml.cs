@@ -49,7 +49,7 @@ namespace Geburtstagsliste
                 // HTTP-Client erstellen
                 using (var httpClient = new HttpClient())
                 {
-                    string serverUrl = "http://localhost:8080/geburtstage";
+                    string serverUrl = "http://localhost:8081/geburtstage";
                     HttpResponseMessage response = await httpClient.GetAsync(serverUrl);
                     response.EnsureSuccessStatusCode();
                     string json = await response.Content.ReadAsStringAsync();
@@ -75,7 +75,7 @@ namespace Geburtstagsliste
             {
                 using (var httpClient = new HttpClient())
                 {
-                    string serverUrl = "http://localhost:8080/geburtstage";
+                    string serverUrl = "http://localhost:8081/geburtstage";
                     string json = JsonSerializer.Serialize(geburtstage);
                     var content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
                     content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -197,6 +197,24 @@ namespace Geburtstagsliste
         private void buttonSpeichern_Click(object sender, RoutedEventArgs e)
         {
             SendGeburtstageAsync(geburtstagsliste);
+        }
+
+        private void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Popup anzeigen
+            int index = listView.SelectedIndex;
+
+            if (index >= 0 && index < geburtstagsliste.Count)
+            {
+                Trace.WriteLine($"List View DoubleClick -> {geburtstagsliste[index].name}");
+                var result = MessageBox.Show($"Do you want to delete {geburtstagsliste[index].name}?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Element löschen
+                    geburtstagsliste.Remove(geburtstagsliste[index]);
+                    listView.ItemsSource = geburtstagsliste;
+                }
+            }            
         }
     }
 }

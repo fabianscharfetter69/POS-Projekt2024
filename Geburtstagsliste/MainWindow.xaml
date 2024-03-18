@@ -31,11 +31,11 @@
                     <Button x:Name="buttonName" Click="buttonName_Click" HorizontalAlignment="Left" Visibility="Hidden" Width="170" Margin="10">Hinzufügen</Button>
                 </StackPanel>
 
-                <ListView x:Name="listView" MinWidth="200" Margin="15,0,0,0"/>
+                <ListView x:Name="listView" MouseDoubleClick="listView_MouseDoubleClick" MinWidth="200" Margin="15,0,0,0"/>
 
 
             </StackPanel>
-
+            
             <Button x:Name="buttonSpeichern" Click="buttonSpeichern_Click" Margin="100,15,100,0">Daten speichern</Button>
 
         </StackPanel>
