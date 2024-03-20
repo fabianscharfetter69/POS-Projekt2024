@@ -14,8 +14,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Configuration
-public class MongoDBConfiguration {
-
+public class MongoDBConfigurations {
+//spring.data.mongodb.uri=mongodb://localhost:27017/yourDatabaseName
     @Value("${spring.data.mongodb.uri}")
     private String connectionString;
 
@@ -24,9 +24,9 @@ public class MongoDBConfiguration {
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         return MongoClients.create(MongoClientSettings.builder()
-                                                      .applyConnectionString(new ConnectionString(connectionString))
-                                                      .codecRegistry(codecRegistry)
-                                                      .build());
+                .applyConnectionString(new ConnectionString(connectionString))
+                .codecRegistry(codecRegistry)
+                .build());
     }
 
 }

@@ -14,15 +14,15 @@
             <Button x:Name="buttonLaden" Click="buttonLaden_Click" Margin="100,0,100,15">Daten laden</Button>
 
             <StackPanel Orientation="Horizontal">
-                
-                
+
+
                 <Calendar x:Name="Calendar" Margin="15" DisplayMode="Month" SelectionMode="SingleDate" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
-                
+
                 <StackPanel Orientation="Vertical" Margin="15">
                     <TextBlock x:Name="textBlockTag" MinWidth="170" HorizontalAlignment="Left" Margin="0,0,0,10" Text="Tag im Kalender auswählen" FontWeight="Bold"></TextBlock>
                     <Label x:Name="labelName" Visibility="Hidden" HorizontalAlignment="Left">Name eingeben:</Label>
                     <TextBox x:Name="textBoxName" Visibility="Hidden" HorizontalAlignment="Left" Width="170" Margin="0,0,0,10"></TextBox>
-                    
+
                     <StackPanel Orientation="Horizontal">
                         <Label x:Name="labelGeburtsjahr" Visibility="Hidden" HorizontalAlignment="Left">Geburtsjahr hinzufügen?</Label>
                         <CheckBox x:Name="checkBoxGeburtsjahr" Unchecked="checkBoxGeburtsjahr_Unchecked" Checked="checkBoxGeburtsjahr_Checked" Visibility="Hidden" HorizontalAlignment="Left" Margin="0,6,0,0"></CheckBox>
@@ -35,9 +35,6 @@
 
 
             </StackPanel>
-            
-            <Button x:Name="buttonSpeichern" Click="buttonSpeichern_Click" Margin="100,15,100,0">Daten speichern</Button>
-
         </StackPanel>
     </Grid>
 </Window>
