@@ -1,5 +1,8 @@
-package com.mongodb.starter;
+package com.mongodb.starter.service;
 
+import com.mongodb.starter.GeburtstagDTO;
+import com.mongodb.starter.repository.GeburtstagsRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +13,7 @@ public class GeburtstagServiceImpl implements GeburtstagService {
 
     private final GeburtstagsRepository geburtstagRepository;
 
-    public GeburtstagServiceImpl(GeburtstagsRepository geburtstagRepository) {
-        this.geburtstagRepository = geburtstagRepository;
-    }
+    public GeburtstagServiceImpl(GeburtstagsRepository geburtstagRepository) { this.geburtstagRepository = geburtstagRepository; }
 
     @Override
     public GeburtstagDTO save(GeburtstagDTO geburtstagDTO) {

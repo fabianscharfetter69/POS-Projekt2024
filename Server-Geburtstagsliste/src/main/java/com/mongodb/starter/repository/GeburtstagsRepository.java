@@ -1,5 +1,7 @@
-package com.mongodb.starter;
+package com.mongodb.starter.repository;
 
+import com.mongodb.starter.Geburtstag;
+import com.mongodb.starter.GeburtstagDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

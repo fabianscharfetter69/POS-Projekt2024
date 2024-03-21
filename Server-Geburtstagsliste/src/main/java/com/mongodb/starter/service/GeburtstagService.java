@@ -1,4 +1,6 @@
-package com.mongodb.starter;
+package com.mongodb.starter.service;
+
+import com.mongodb.starter.GeburtstagDTO;
 
 import java.util.List;
 

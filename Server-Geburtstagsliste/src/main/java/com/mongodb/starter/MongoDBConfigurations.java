@@ -15,7 +15,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Configuration
 public class MongoDBConfigurations {
-//spring.data.mongodb.uri=mongodb://localhost:27017/yourDatabaseName
     @Value("${spring.data.mongodb.uri}")
     private String connectionString;
 
