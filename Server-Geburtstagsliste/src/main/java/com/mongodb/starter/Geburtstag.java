@@ -10,6 +10,10 @@ public class Geburtstag {
     private String month;
     private String year;
 
+    public Geburtstag(){
+
+    }
+
     public Geburtstag(ObjectId id, String name, String day, String month) {
         this.id = id;
         this.name = name;

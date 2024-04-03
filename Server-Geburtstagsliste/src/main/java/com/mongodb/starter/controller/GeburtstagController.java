@@ -1,5 +1,6 @@
-package com.mongodb.starter;
+package com.mongodb.starter.controller;
 
+import com.mongodb.starter.GeburtstagDTO;
 import com.mongodb.starter.service.GeburtstagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class GeburtstagController {
     public Long deleteGeburtstag(@PathVariable String id) {
         return geburtstagService.delete(id);
     }
+
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

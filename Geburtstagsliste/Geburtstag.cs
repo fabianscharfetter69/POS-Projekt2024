@@ -4,45 +4,80 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Geburtstagsliste
 {
     internal class Geburtstag
     {
-        public string name { get; set; }
-        public string day { get; set; }
-        public string month { get; set; }
-        public string year { get; set; }
+        private string? id;
+        private string name;
+        private string day;
+        private string month;
+        private string year;
+        public Geburtstag()
+        {
+        }
 
-        public Geburtstag(string name, string day, string month) 
-        { 
-            this.name = name;   
+
+        //Konstruktor mit ID
+        public Geburtstag(string? id, string name, string day, string month)
+        {
+            this.id = id;
+            this.name = name;
             this.day = day;
             this.month = month;
         }
 
-        public Geburtstag(string name, string day, string month, string year)
+        public Geburtstag(string? id, string name, string day, string month, string year)
         {
+            this.id = id;
             this.name = name;
             this.day = day;
             this.month = month;
             this.year = year;
         }
 
-        public String ToString()
+        public string Id
         {
-           
-            if(year is null)
-            {
-                return $"{day}.{month}.\t{name}";
+            get { return id; }
+            set { id = value; }
+        }
 
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string Day
+        {
+            get { return day; }
+            set { day = value; }
+        }
+
+        public string Month
+        {
+            get { return month; }
+            set { month = value; }
+        }
+
+        public string Year
+        {
+            get { return year; }
+            set { year = value; }
+        }
+
+        public override string ToString()
+        {
+            if (year == null)
+            {
+                return day + "." + month + ".\t" + name;
             }
             else
             {
-                return $"{day}.{month}.\t{name}, {year}";
+                return day + "." + month + ".\t" + name + ", " + year;
             }
         }
-
-        
     }
 }

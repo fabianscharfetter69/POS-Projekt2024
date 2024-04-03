@@ -86,7 +86,7 @@ namespace Geburtstagsliste
                     if (comboBoxGeburtsjahr.SelectedItem is not null)
                     {
                         string year = comboBoxGeburtsjahr.SelectedValue.ToString();
-                        Geburtstag geb = new Geburtstag(name, day, month, year);
+                        Geburtstag geb = new Geburtstag(null, name, day, month, year);
                         geburtstagsliste.Add(geb);
 
                         SendGeburtstagToServerAsync(geb);
@@ -100,7 +100,7 @@ namespace Geburtstagsliste
                 //Geburtsjahr wird nicht gespeichert
                 else
                 {
-                    Geburtstag geb = new Geburtstag(name, day, month);
+                    Geburtstag geb = new Geburtstag(null, name, day, month);
                     geburtstagsliste.Add(geb);
 
                     SendGeburtstagToServerAsync(geb);
@@ -138,7 +138,7 @@ namespace Geburtstagsliste
 
         private static ObservableCollection<Geburtstag> SortByDate(ObservableCollection<Geburtstag> geburtstagsliste)
         {
-            return new ObservableCollection<Geburtstag>(geburtstagsliste.OrderBy(g => g.month).ThenBy(g => g.day));
+            return new ObservableCollection<Geburtstag>(geburtstagsliste.OrderBy(g => g.Month).ThenBy(g => g.Day));
         }
 
         private void buttonLaden_Click(object sender, RoutedEventArgs e)
@@ -153,8 +153,8 @@ namespace Geburtstagsliste
 
             if (index >= 0 && index < geburtstagsliste.Count)
             {
-                Trace.WriteLine($"List View DoubleClick -> {geburtstagsliste[index].name}");
-                var result = MessageBox.Show($"Do you want to delete {geburtstagsliste[index].name}?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                Trace.WriteLine($"List View DoubleClick -> {geburtstagsliste[index].Name}");
+                var result = MessageBox.Show($"Do you want to delete {geburtstagsliste[index].Name}?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     // Element löschen
@@ -178,7 +178,7 @@ namespace Geburtstagsliste
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync("/geb-list/geburtstage");
+                HttpResponseMessage response = await client.GetAsync("/geb-liste/geburtstage");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -207,7 +207,7 @@ namespace Geburtstagsliste
                 string jsonString = JsonSerializer.Serialize(geburtstag);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync("/geb-list/geburtstag", content);
+                HttpResponseMessage response = await client.PostAsync("/geb-liste/geburtstag", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -231,7 +231,7 @@ namespace Geburtstagsliste
             {
                 client.BaseAddress = new Uri("http://localhost:8081"); // Setzen Sie die Basisadresse Ihrer Web-API ein
 
-                HttpResponseMessage response = await client.DeleteAsync($"/api/geburtstag/{id}"); // Stellen Sie sicher, dass die Endpunkt-URL Ihrer Web-API korrekt ist
+                HttpResponseMessage response = await client.DeleteAsync($"/geb-liste/geburtstag/{id}"); // Stellen Sie sicher, dass die Endpunkt-URL Ihrer Web-API korrekt ist
 
                 if (response.IsSuccessStatusCode)
                 {

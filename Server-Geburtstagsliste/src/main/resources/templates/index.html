@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender</title>
+    <link rel="stylesheet" href="/stylesheet.css">
+</head>
+<body>
+<div class="calendar">
+    <div class="header">
+        <button class="prev" onclick="prevMonth()">&#10094;</button>
+        <h2 id="monthYear"></h2>
+        <button class="next" onclick="nextMonth()">&#10095;</button>
+    </div>
+    <ul class="weekdays">
+        <li>Mo</li>
+        <li>Di</li>
+        <li>Mi</li>
+        <li>Do</li>
+        <li>Fr</li>
+        <li>Sa</li>
+        <li>So</li>
+    </ul>
+    <ul id="days" class="days"></ul>
+</div>
+
+<!-- Modalbox für das Hinzufügen von Geburtstagen -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Geburtstag erstellen</h2>
+        <input type="text" id="birthdayName" placeholder="Name">
+        <input type="number" id="birthdayDay" placeholder="Tag">
+        <input type="number" id="birthdayMonth" placeholder="Monat">
+        <input type="number" id="birthdayYear" placeholder="Jahr (optional)">
+        <button onclick="saveBirthday()">Speichern</button>
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>
