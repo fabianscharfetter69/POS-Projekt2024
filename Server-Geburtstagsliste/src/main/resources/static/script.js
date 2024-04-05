@@ -1,77 +1,89 @@
-const weekdays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+const daysTag = document.querySelector(".days"),
+    currentDate = document.querySelector(".current-date"),
+    prevNextIcon = document.querySelectorAll(".icons span");
 
-let currentDate = new Date();
+// getting new date, current year and month
+let date = new Date(),
+    currYear = date.getFullYear(),
+    currMonth = date.getMonth();
 
-function renderCalendar() {
-    const monthYear = document.getElementById('monthYear');
-    monthYear.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+// storing full name of all months in array
+const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
+    "August", "September", "Oktober", "November", "Dezember"];
 
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-    const startingDayOfWeek = firstDayOfMonth.getDay();
+const renderCalendar = () => {
+    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
+        lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
+        lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
+        lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
+    let liTag = "";
 
-    const daysList = document.getElementById('days');
-    daysList.innerHTML = '';
-
-    for (let i = 0; i < startingDayOfWeek; i++) {
-        const prevDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), -i);
-        const listItem = document.createElement('li');
-        listItem.textContent = prevDate.getDate();
-        listItem.classList.add('past');
-        daysList.appendChild(listItem);
+    for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
+        liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
     }
 
-    for (let i = 1; i <= daysInMonth; i++) {
-        const listItem = document.createElement('li');
-        listItem.textContent = i;
-        if (currentDate.getFullYear() === new Date().getFullYear() && currentDate.getMonth() === new Date().getMonth() && i === new Date().getDate()) {
-            listItem.classList.add('today');
-        } else if (new Date(currentDate.getFullYear(), currentDate.getMonth(), i) < new Date()) {
-            listItem.classList.add('past');
-        }
-        listItem.addEventListener('click', () => openModal(listItem));
-        daysList.appendChild(listItem);
+    for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
+        // adding active class to li if the current day, month, and year matched
+        let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+        && currYear === new Date().getFullYear() ? "active" : "";
+        liTag += `<li class="${isToday}">${i}</li>`;
     }
-}
 
-function prevMonth() {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar();
+    for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
+        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
+    }
+    currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+    daysTag.innerHTML = liTag;
 }
-
-function nextMonth() {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar();
-}
-
-// Öffne die Modalbox zum Hinzufügen von Geburtstagen
-function openModal(dayElement) {
-    const day = dayElement.textContent;
-    const monthYear = document.getElementById('monthYear').textContent;
-    const [month, year] = monthYear.split(' ');
-    document.getElementById('birthdayName').value = '';
-    document.getElementById('birthdayDay').value = day;
-    document.getElementById('birthdayMonth').value = month;
-    document.getElementById('birthdayYear').value = year;
-    modal.style.display = "block";
-}
-
-// Schließe die Modalbox
-function closeModal() {
-    modal.style.display = "none";
-}
-
-// Speichere den Geburtstag und färbe den entsprechenden Tag ein
-function saveBirthday() {
-    const name = document.getElementById('birthdayName').value;
-    const day = document.getElementById('birthdayDay').value;
-    const month = document.getElementById('birthdayMonth').value;
-    const year = document.getElementById('birthdayYear').value;
-    const dayElement = document.querySelector(`.days li:nth-child(${day})`);
-    dayElement.style.backgroundColor = "#FFD700"; // Beispiel für die Farbe Gelb
-    closeModal();
-}
-
-// Rufe renderCalendar auf, um den Kalender zu initialisieren
 renderCalendar();
+
+prevNextIcon.forEach(icon => { // getting prev and next icons
+    icon.addEventListener("click", () => { // adding click event on both icons
+        // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
+        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+        if(currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
+            // creating a new date of current year & month and pass it as date value
+            date = new Date(currYear, currMonth, new Date().getDate());
+            currYear = date.getFullYear(); // updating current year with new date year
+            currMonth = date.getMonth(); // updating current month with new date month
+        } else {
+            date = new Date(); // pass the current date as date value
+        }
+        renderCalendar(); // calling renderCalendar function
+    });
+});
+
+const dayOnClick = (event) => {
+    const clickedDay = event.target;
+    const nameInput = document.getElementById("nameInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const popup = document.getElementById("popup");
+
+    // Open the popup
+    popup.style.display = "block";
+
+    submitBtn.addEventListener("click", () => {
+        const name = nameInput.value.trim();
+        if (name !== "") {
+            //clickedDay.innerHTML = `${name}<br><hr>${clickedDay.innerHTML}`;
+            clickedDay.classList.add("birthday"); // Add a class to the clicked day
+            // Close the popup
+            popup.style.display = "none";
+        }
+    });
+
+    // Close the popup when clicking the close button
+    const closeBtn = document.querySelector(".close");
+    closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+    });
+
+    // Close the popup when clicking outside of it
+    window.addEventListener("click", (event) => {
+        if (event.target == popup) {
+            popup.style.display = "none";
+        }
+    });
+};
+

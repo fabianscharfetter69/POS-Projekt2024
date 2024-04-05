@@ -1,43 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <title>Geburtstags-Liste</title>
+    <link rel="stylesheet" href="/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalender</title>
-    <link rel="stylesheet" href="/stylesheet.css">
+    <!-- Google Font Link for Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <script src="/script.js" defer></script>
 </head>
 <body>
-<div class="calendar">
-    <div class="header">
-        <button class="prev" onclick="prevMonth()">&#10094;</button>
-        <h2 id="monthYear"></h2>
-        <button class="next" onclick="nextMonth()">&#10095;</button>
-    </div>
-    <ul class="weekdays">
-        <li>Mo</li>
-        <li>Di</li>
-        <li>Mi</li>
-        <li>Do</li>
-        <li>Fr</li>
-        <li>Sa</li>
-        <li>So</li>
-    </ul>
-    <ul id="days" class="days"></ul>
-</div>
-
-<!-- Modalbox für das Hinzufügen von Geburtstagen -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Geburtstag erstellen</h2>
-        <input type="text" id="birthdayName" placeholder="Name">
-        <input type="number" id="birthdayDay" placeholder="Tag">
-        <input type="number" id="birthdayMonth" placeholder="Monat">
-        <input type="number" id="birthdayYear" placeholder="Jahr (optional)">
-        <button onclick="saveBirthday()">Speichern</button>
+<div class="wrapper">
+    <header>
+        <p class="current-date"></p>
+        <div class="icons">
+            <span id="prev" class="material-symbols-rounded">chevron_left</span>
+            <span id="next" class="material-symbols-rounded">chevron_right</span>
+        </div>
+    </header>
+    <div class="calendar">
+        <ul class="weeks">
+            <li>So</li>
+            <li>Mo</li>
+            <li>Di</li>
+            <li>Mi</li>
+            <li>Do</li>
+            <li>Fr</li>
+            <li>Sa</li>
+        </ul>
+        <ul class="days" onclick="dayOnClick(event)"></ul>
     </div>
 </div>
+<div id="popup" class="popup">
+    <form action="/newGeburtstag" method="get" class="sub-container">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <p>Geburtstagskind hinzufügen:</p>
+            <input type="text" id="nameInput">
+            <button id="submitBtn">Submit</button>
+        </div>
+    </form>
+</div>
 
-<script src="/script.js"></script>
 </body>
 </html>
