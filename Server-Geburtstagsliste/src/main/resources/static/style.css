@@ -9,8 +9,7 @@
 body{
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    justify-content: center;
+    justify-content: center; /* Zentrieren Sie den Inhalt horizontal */
     min-height: 100vh;
     background: #9B59B6;
 }
@@ -19,6 +18,7 @@ body{
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    margin: auto; /* Zentrieren Sie den Wrapper vertikal */
 }
 .wrapper header{
     display: flex;
@@ -96,7 +96,7 @@ header .current-date{
     transform: translate(-50%, -50%);
 }
 
-
+/* Neue Änderungen */
 .days li.active::before{
     background: #9B59B6;
 }
@@ -118,26 +118,38 @@ header .current-date{
 
 .popup-content {
     background-color: #fefefe;
-    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 70%; /* Ändern Sie die Breite des Popup-Inhalts */
+    max-width: 300px; /* Setzen Sie die maximale Breite */
+    margin: 10% auto; /* Zentrieren Sie das Popup-Formular vertikal und verringern Sie den Abstand */
 }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+/* Kleineres Eingabefeld */
+.popup-content input[type="date"],
+.popup-content input[type="text"] {
+    width: calc(100% - 20px); /* Kleineres Eingabefeld */
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
+.popup-content button {
+    width: 100%;
+    padding: 10px;
+    background-color: #9B59B6;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.days li.birthday::before {
-    background-color: #7bff7b;
+.popup-content button:hover {
+    background-color: #8e44ad;
+}
+
+.error-message {
+    color: red;
+    margin-top: 5px;
 }

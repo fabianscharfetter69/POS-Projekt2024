@@ -31,16 +31,16 @@
         <ul class="days" onclick="dayOnClick(event)"></ul>
     </div>
 </div>
-<div id="popup" class="popup">
-    <form action="/newGeburtstag" method="get" class="sub-container">
-        <div class="popup-content">
-            <span class="close">&times;</span>
-            <p>Geburtstagskind hinzufügen:</p>
-            <input type="text" id="nameInput">
-            <button id="submitBtn">Submit</button>
-        </div>
-    </form>
-</div>
+
+<form id="birthdayForm" class="popup-content" action="/newGeburtstag" method="POST">
+    <span class="close">&times;</span>
+    <p>Geburtstagskind hinzufügen:</p>
+    <input type="date" id="dateInput" name="dateInput" required>
+    <input type="text" id="nameInput" name="nameInput" placeholder="Name" required>
+    <button type="submit" id="submitBtn">Submit</button>
+    <p id="errorMsg" class="error-message"></p>
+</form>
+
 
 </body>
 </html>

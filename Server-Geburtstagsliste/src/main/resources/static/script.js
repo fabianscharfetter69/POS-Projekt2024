@@ -56,20 +56,26 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
 
 const dayOnClick = (event) => {
     const clickedDay = event.target;
-    const nameInput = document.getElementById("nameInput");
-    const submitBtn = document.getElementById("submitBtn");
     const popup = document.getElementById("popup");
 
     // Open the popup
     popup.style.display = "block";
 
-    submitBtn.addEventListener("click", () => {
-        const name = nameInput.value.trim();
-        if (name !== "") {
-            //clickedDay.innerHTML = `${name}<br><hr>${clickedDay.innerHTML}`;
-            clickedDay.classList.add("birthday"); // Add a class to the clicked day
+    const birthdayForm = document.getElementById("birthdayForm");
+    birthdayForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // prevent form submission
+
+        const dateInput = document.getElementById("dateInput").value;
+        const nameInput = document.getElementById("nameInput").value;
+        const errorMsg = document.getElementById("errorMsg");
+
+        if (isValidDate(dateInput)) {
+            clickedDay.classList.add("birthday");
+            clickedDay.innerHTML = `${nameInput}<br>${clickedDay.innerHTML}`;
             // Close the popup
             popup.style.display = "none";
+        } else {
+            errorMsg.innerText = "Bitte geben Sie ein gültiges Datum ein.";
         }
     });
 
@@ -77,13 +83,26 @@ const dayOnClick = (event) => {
     const closeBtn = document.querySelector(".close");
     closeBtn.addEventListener("click", () => {
         popup.style.display = "none";
+        resetForm(); // Reset form inputs and error message
     });
 
     // Close the popup when clicking outside of it
     window.addEventListener("click", (event) => {
         if (event.target == popup) {
             popup.style.display = "none";
+            resetForm(); // Reset form inputs and error message
         }
     });
+};
+
+// Überprüfung der Gültigkeit des Datums
+const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
+};
+
+// Zurücksetzen des Formulars und der Fehlermeldung
+const resetForm = () => {
+    document.getElementById("birthdayForm").reset();
+    document.getElementById("errorMsg").innerText = "";
 };
 
