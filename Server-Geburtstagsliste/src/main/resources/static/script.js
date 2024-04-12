@@ -2,12 +2,10 @@ const daysTag = document.querySelector(".days"),
     currentDate = document.querySelector(".current-date"),
     prevNextIcon = document.querySelectorAll(".icons span");
 
-// getting new date, current year and month
 let date = new Date(),
     currYear = date.getFullYear(),
     currMonth = date.getMonth();
 
-// storing full name of all months in array
 const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
     "August", "September", "Oktober", "November", "Dezember"];
 
@@ -23,7 +21,6 @@ const renderCalendar = () => {
     }
 
     for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
-        // adding active class to li if the current day, month, and year matched
         let isToday = i === date.getDate() && currMonth === new Date().getMonth()
         && currYear === new Date().getFullYear() ? "active" : "";
         liTag += `<li class="${isToday}">${i}</li>`;
@@ -34,19 +31,20 @@ const renderCalendar = () => {
     }
     currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
     daysTag.innerHTML = liTag;
+
+    // Laden der Geburtstage beim Rendern des Kalenders
+    loadBirthdays();
 }
 renderCalendar();
 
 prevNextIcon.forEach(icon => { // getting prev and next icons
     icon.addEventListener("click", () => { // adding click event on both icons
-        // if clicked icon is previous icon then decrement current month by 1 else increment it by 1
         currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
 
-        if(currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
-            // creating a new date of current year & month and pass it as date value
+        if(currMonth < 0 || currMonth > 11) {
             date = new Date(currYear, currMonth, new Date().getDate());
-            currYear = date.getFullYear(); // updating current year with new date year
-            currMonth = date.getMonth(); // updating current month with new date month
+            currYear = date.getFullYear();
+            currMonth = date.getMonth();
         } else {
             date = new Date(); // pass the current date as date value
         }
@@ -58,21 +56,22 @@ const dayOnClick = (event) => {
     const clickedDay = event.target;
     const popup = document.getElementById("popup");
 
-    // Open the popup
     popup.style.display = "block";
 
     const birthdayForm = document.getElementById("birthdayForm");
     birthdayForm.addEventListener("submit", (e) => {
-        e.preventDefault(); // prevent form submission
+        e.preventDefault();
 
         const dateInput = document.getElementById("dateInput").value;
+        document.getElementById("dateInput").value = null;
         const nameInput = document.getElementById("nameInput").value;
+        document.getElementById("nameInput").value = null;
         const errorMsg = document.getElementById("errorMsg");
 
         if (isValidDate(dateInput)) {
             clickedDay.classList.add("birthday");
             clickedDay.innerHTML = `${nameInput}<br>${clickedDay.innerHTML}`;
-            // Close the popup
+
             popup.style.display = "none";
         } else {
             errorMsg.innerText = "Bitte geben Sie ein gültiges Datum ein.";
@@ -83,14 +82,14 @@ const dayOnClick = (event) => {
     const closeBtn = document.querySelector(".close");
     closeBtn.addEventListener("click", () => {
         popup.style.display = "none";
-        resetForm(); // Reset form inputs and error message
+        resetForm();
     });
 
     // Close the popup when clicking outside of it
     window.addEventListener("click", (event) => {
         if (event.target == popup) {
             popup.style.display = "none";
-            resetForm(); // Reset form inputs and error message
+            resetForm();
         }
     });
 };
@@ -106,3 +105,32 @@ const resetForm = () => {
     document.getElementById("errorMsg").innerText = "";
 };
 
+
+const url = 'http://localhost:8081/geb-liste/geburtstage';
+
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+        return [];
+    }
+}
+
+// Eine Funktion, um die erhaltenen Daten in eine Liste einzufügen
+async function createList() {
+    const data = await fetchData(url);
+    const list = document.createElement('ul');
+
+    // Schleife durch die Daten und Erstellen von Listenelementen für jeden Eintrag
+    data.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.name} - Geburtstag am ${item.day}.${item.month}.${item.year}`;
+        list.appendChild(listItem);
+    });
+
+    // Die Liste dem DOM hinzufügen
+    document.body.appendChild(list);
+}

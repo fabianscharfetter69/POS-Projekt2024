@@ -9,6 +9,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -26,6 +27,11 @@ public class MongoDBConfigurations {
                 .applyConnectionString(new ConnectionString(connectionString))
                 .codecRegistry(codecRegistry)
                 .build());
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

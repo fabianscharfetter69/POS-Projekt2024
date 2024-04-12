@@ -96,7 +96,6 @@ header .current-date{
     transform: translate(-50%, -50%);
 }
 
-/* Neue Änderungen */
 .days li.active::before{
     background: #9B59B6;
 }
@@ -116,6 +115,10 @@ header .current-date{
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+.days li.birthday::before {
+    background-color: #7bff7b;
+}
+
 .popup-content {
     background-color: #fefefe;
     padding: 20px;
@@ -125,10 +128,9 @@ header .current-date{
     margin: 10% auto; /* Zentrieren Sie das Popup-Formular vertikal und verringern Sie den Abstand */
 }
 
-/* Kleineres Eingabefeld */
 .popup-content input[type="date"],
 .popup-content input[type="text"] {
-    width: calc(100% - 20px); /* Kleineres Eingabefeld */
+    width: calc(100% - 20px);
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
