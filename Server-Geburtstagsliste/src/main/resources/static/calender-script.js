@@ -52,6 +52,10 @@ prevNextIcon.forEach(icon => { // getting prev and next icons
     });
 });
 
+
+
+
+
 const dayOnClick = (event) => {
     const clickedDay = event.target;
     const popup = document.getElementById("popup");
@@ -104,6 +108,10 @@ const resetForm = () => {
     document.getElementById("birthdayForm").reset();
     document.getElementById("errorMsg").innerText = "";
 };
+
+
+
+
 
 
 const url = 'http://localhost:8081/geb-liste/geburtstage';

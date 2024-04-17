@@ -31,12 +31,17 @@ namespace Geburtstagsliste
 
             // Fülle die ComboBox mit den Jahren von 1900 bis zum aktuellen Jahr
             ObservableCollection<string> Years = new ObservableCollection<string>();
-            int currentYear = DateTime.Now.Year;
-            for (int year = currentYear; year >= 1900; year--)
+
+            int aktuell = DateTime.Now.Year;
+            for (int year = aktuell; year >= 1900; year--)
             {
                 Years.Add(year.ToString());
             }
+
             comboBoxGeburtsjahr.ItemsSource = Years;
+
+            //Laden der Geburtstage vom Server
+            getGeburtstageFromServer();
         }
 
         
@@ -87,10 +92,12 @@ namespace Geburtstagsliste
                     {
                         string year = comboBoxGeburtsjahr.SelectedValue.ToString();
                         Geburtstag geb = new Geburtstag(null, name, day, month, year);
-                        geburtstagsliste.Add(geb);
+                        addGeburtstagToServer(geb);
 
-                        SendGeburtstagToServerAsync(geb);
                         MessageBox.Show($"<{geb.ToString()}> wurde erfolgreich hinzugefügt.");
+
+                        //Aktualisieren
+                        getGeburtstageFromServer();
                     }
                     else
                     {
@@ -101,10 +108,12 @@ namespace Geburtstagsliste
                 else
                 {
                     Geburtstag geb = new Geburtstag(null, name, day, month);
-                    geburtstagsliste.Add(geb);
+                    addGeburtstagToServer(geb);
 
-                    SendGeburtstagToServerAsync(geb);
                     MessageBox.Show($"<{geb.ToString()}> wurde erfolgreich hinzugefügt.");
+
+                    //Aktualisieren
+                    getGeburtstageFromServer();
                 }
             }
 
@@ -123,6 +132,7 @@ namespace Geburtstagsliste
             comboBoxGeburtsjahr.Visibility = Visibility.Hidden;
         }
 
+        //Erstellt Liste an Strings für die Ausgabe
         public List<String> listToString()
         {
             List<String> strings = new List<String>();
@@ -136,16 +146,13 @@ namespace Geburtstagsliste
             return strings;
         }
 
+        //Sortiert die Geburtstage
         private static ObservableCollection<Geburtstag> SortByDate(ObservableCollection<Geburtstag> geburtstagsliste)
         {
             return new ObservableCollection<Geburtstag>(geburtstagsliste.OrderBy(g => g.Month).ThenBy(g => g.Day));
         }
 
-        private void buttonLaden_Click(object sender, RoutedEventArgs e)
-        {
-            GetGeburtstageFromServerAsync().Wait();
-        }
-
+        //Zum löschen eines Geburtstages
         private void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Popup anzeigen
@@ -164,87 +171,84 @@ namespace Geburtstagsliste
             }            
         }
 
-
-
-
-
-        private async Task<List<Geburtstag>> GetGeburtstageFromServerAsync()
+        //Laden der Daten vom Server
+        public async void getGeburtstageFromServer()
         {
-            List<Geburtstag> geburtstage = new List<Geburtstag>();
+            Trace.WriteLine("Laden vom Server");
 
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:8081"); 
+                client.BaseAddress = new Uri("http://localhost:8081/");
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpResponseMessage response = await client.GetAsync("/geb-liste/geburtstage");
-
+                HttpResponseMessage response = await client.GetAsync("geb-liste/geburtstage");
                 if (response.IsSuccessStatusCode)
                 {
+                    Trace.WriteLine("Success");
                     string jsonString = await response.Content.ReadAsStringAsync();
-                    geburtstage = JsonSerializer.Deserialize<List<Geburtstag>>(jsonString);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    var geburtstageFromServer = JsonSerializer.Deserialize<ObservableCollection<Geburtstag>>(jsonString, options);
+
+                    geburtstagsliste.Clear();
+                    foreach (var geburtstag in geburtstageFromServer)
+                    {
+                        geburtstagsliste.Add(geburtstag);
+                    }
+
+                    //Laden in Ausgabe
+                    Trace.WriteLine("Ausgabe wird aktualisiert");
+                    List<String> strings = listToString();
+                    listView.ItemsSource = strings;   
                 }
                 else
                 {
-                    MessageBox.Show("Fehler");
+                    MessageBox.Show($"Server returned {response.StatusCode} - {response.ReasonPhrase}");
                 }
             }
-
-            return geburtstage;
         }
 
-        private async Task<bool> SendGeburtstagToServerAsync(Geburtstag geburtstag)
+        //Geburtstag zum Server senden
+        private async Task<bool> addGeburtstagToServer(Geburtstag geb)
         {
-            bool success = false;
 
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri("http://localhost:8081"); // Setzen Sie die Basisadresse Ihrer Web-API ein
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                string jsonString = JsonSerializer.Serialize(geburtstag);
-                HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await client.PostAsync("/geb-liste/geburtstag", content);
-
-                if (response.IsSuccessStatusCode)
+                using (HttpClient client = new HttpClient())
                 {
-                    success = true;
-                }
-                else
-                {
-                    MessageBox.Show("Fehler");
+                    client.BaseAddress = new Uri("http://localhost:8081/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    string jsonString = JsonSerializer.Serialize(geb, options);
+                    var content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync("geb-liste/geburtstag", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Server returned {response.StatusCode} - {response.ReasonPhrase}");
+                        return false;
+                    }
                 }
             }
-
-            return success;
-        }
-
-
-        private async Task<bool> DeleteGeburtstagFromServerAsync(string id)
-        {
-            bool success = false;
-
-            using (HttpClient client = new HttpClient())
+            catch (Exception ex)
             {
-                client.BaseAddress = new Uri("http://localhost:8081"); // Setzen Sie die Basisadresse Ihrer Web-API ein
-
-                HttpResponseMessage response = await client.DeleteAsync($"/geb-liste/geburtstag/{id}"); // Stellen Sie sicher, dass die Endpunkt-URL Ihrer Web-API korrekt ist
-
-                if (response.IsSuccessStatusCode)
-                {
-                    success = true;
-                }
-                else
-                {
-                    MessageBox.Show("Fehler");
-                }
+                MessageBox.Show($"Error: {ex.Message}");
+                return false;
             }
 
-            return success;
         }
-
     }
 }

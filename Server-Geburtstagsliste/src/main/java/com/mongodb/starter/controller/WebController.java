@@ -40,12 +40,11 @@ public class WebController {
             if (response.getStatusCode().is2xxSuccessful()) {
                 System.out.println("Geburtstag erfolgreich hinzugefügt: " + response.getBody());
             } else {
-                System.out.println("Fehler beim Hinzufügen des Geburtstags: " + response.getStatusCodeValue());
+                System.out.println("Fehler beim Hinzufügen des Geburtstags");
             }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            // Handle parse error
         }
 
         return "redirect:/website";

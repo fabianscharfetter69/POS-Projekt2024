@@ -10,9 +10,7 @@
         <StackPanel>
             
             <Label HorizontalAlignment="Center" Margin="20" FontWeight="Bold" FontSize="20">Geburtstagsliste</Label>
-            
-            <Button x:Name="buttonLaden" Click="buttonLaden_Click" Margin="100,0,100,15">Daten laden</Button>
-
+     
             <StackPanel Orientation="Horizontal">
 
 
