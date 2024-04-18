@@ -70,14 +70,7 @@ namespace Geburtstagsliste
 
         public override string ToString()
         {
-            if (year == null)
-            {
-                return day + "." + month + ".\t" + name;
-            }
-            else
-            {
-                return day + "." + month + ".\t" + name + ", " + year;
-            }
+            return day + "." + month + ".\t" + name;
         }
     }
 }

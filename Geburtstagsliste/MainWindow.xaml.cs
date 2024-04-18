@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -153,7 +154,7 @@ namespace Geburtstagsliste
         }
 
         //Zum löschen eines Geburtstages
-        private void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private async void listView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // Popup anzeigen
             int index = listView.SelectedIndex;
@@ -165,8 +166,32 @@ namespace Geburtstagsliste
                 if (result == MessageBoxResult.Yes)
                 {
                     // Element löschen
-                    geburtstagsliste.Remove(geburtstagsliste[index]);
-                    listView.ItemsSource = geburtstagsliste;
+                    string id = geburtstagsliste[index].Id;
+                    string url = $"http://localhost:8081/geb-liste/geburtstag/{id}";
+
+                    using (HttpClient client = new HttpClient())
+                    {
+                        try
+                        {
+                            HttpResponseMessage response = await client.DeleteAsync(url);
+
+                            //Laden in Ausgabe
+                            getGeburtstageFromServer();
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                Trace.WriteLine($"Geburtstag mit ID {id} erfolgreich gelöscht.");
+                            }
+                            else
+                            {
+                                Trace.WriteLine($"Fehler beim Löschen des Geburtstags mit ID {id}. Statuscode: {response.StatusCode}");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Trace.WriteLine($"Fehler beim Löschen des Geburtstags: {ex.Message}");
+                        }
+                    }
                 }
             }            
         }
@@ -174,81 +199,82 @@ namespace Geburtstagsliste
         //Laden der Daten vom Server
         public async void getGeburtstageFromServer()
         {
-            Trace.WriteLine("Laden vom Server");
-
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:8081/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage response = await client.GetAsync("geb-liste/geburtstage");
-                if (response.IsSuccessStatusCode)
-                {
-                    Trace.WriteLine("Success");
-                    string jsonString = await response.Content.ReadAsStringAsync();
-                    var options = new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
-
-                    var geburtstageFromServer = JsonSerializer.Deserialize<ObservableCollection<Geburtstag>>(jsonString, options);
-
-                    geburtstagsliste.Clear();
-                    foreach (var geburtstag in geburtstageFromServer)
-                    {
-                        geburtstagsliste.Add(geburtstag);
-                    }
-
-                    //Laden in Ausgabe
-                    Trace.WriteLine("Ausgabe wird aktualisiert");
-                    List<String> strings = listToString();
-                    listView.ItemsSource = strings;   
-                }
-                else
-                {
-                    MessageBox.Show($"Server returned {response.StatusCode} - {response.ReasonPhrase}");
-                }
-            }
-        }
-
-        //Geburtstag zum Server senden
-        private async Task<bool> addGeburtstagToServer(Geburtstag geb)
-        {
-
             try
             {
+                Trace.WriteLine("Laden vom Server");
+
                 using (HttpClient client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("http://localhost:8081/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var options = new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    };
-                    string jsonString = JsonSerializer.Serialize(geb, options);
-                    var content = new StringContent(jsonString, System.Text.Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response = await client.PostAsync("geb-liste/geburtstag", content);
+                    HttpResponseMessage response = await client.GetAsync("geb-liste/geburtstage");
                     if (response.IsSuccessStatusCode)
                     {
-                        return true;
+                        Trace.WriteLine("Success");
+                        string jsonString = await response.Content.ReadAsStringAsync();
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                        var geburtstageFromServer = JsonSerializer.Deserialize<ObservableCollection<Geburtstag>>(jsonString, options);
+
+                        geburtstagsliste.Clear();
+                        foreach (var geburtstag in geburtstageFromServer)
+                        {
+                            geburtstagsliste.Add(geburtstag);
+                        }
+
+                        //Laden in Ausgabe
+                        Trace.WriteLine("Ausgabe wird aktualisiert");
+                        List<String> strings = listToString();
+                        listView.ItemsSource = strings;
                     }
                     else
                     {
                         MessageBox.Show($"Server returned {response.StatusCode} - {response.ReasonPhrase}");
-                        return false;
                     }
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}");
-                return false;
+                MessageBox.Show($"Fehler beim Laden der Daten: {ex.Message}");
             }
+        }
 
+
+
+        //Geburtstag zum Server senden
+        private async Task addGeburtstagToServer(Geburtstag geb)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Url zum posten
+                string url = "http://localhost:8081/geb-liste/geburtstag";
+
+                //Json erstellen
+                string data = "{";
+                data += $"  \"name\": \"{geb.Name}\",     \"day\": \"{geb.Day}\",     \"month\": \"{geb.Month}\",     \"year\": \"{geb.Year}\"  ";
+                data += "}";
+                Trace.WriteLine(data);
+
+                try
+                {
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+                    HttpResponseMessage response = await client.PostAsync(url, content);
+
+                    response.EnsureSuccessStatusCode();
+
+                    Console.WriteLine("Daten erfolgreich gesendet.");
+                }
+                catch (HttpRequestException e)
+                {
+                    Console.WriteLine($"Fehler beim Senden der Daten: {e.Message}");
+                }
+            }
         }
     }
 }
