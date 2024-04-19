@@ -1,4 +1,5 @@
 ﻿using Geburtstagsliste;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -228,9 +229,7 @@ namespace Geburtstagsliste
                         }
 
                         //Laden in Ausgabe
-                        Trace.WriteLine("Ausgabe wird aktualisiert");
-                        List<String> strings = listToString();
-                        listView.ItemsSource = strings;
+                        erstelleAusgabe();
                     }
                     else
                     {
@@ -275,6 +274,98 @@ namespace Geburtstagsliste
                     Console.WriteLine($"Fehler beim Senden der Daten: {e.Message}");
                 }
             }
+        }
+        private void erstelleAusgabe()
+        {
+            if(checkBox.IsChecked == true)
+            {
+                string selectedDate = Calendar.DisplayDate.ToShortDateString();
+                Trace.WriteLine(selectedDate);
+
+                //Datum splitten
+                string[] arrDatum = selectedDate.Split(".");
+                string month = arrDatum[1];
+                Trace.WriteLine(month);
+
+
+                //Ausgabe aktualisieren
+                string monat = getMonatString(month);
+                labelGeburtstage.Content = $"Geburtstage im {monat}:";
+
+                List<String> temp = new List<String>();
+                foreach(Geburtstag geb in geburtstagsliste)
+                {
+                    if(geb.Month == month)
+                    {
+                        temp.Add(geb.ToString());
+                    }
+                }
+                listView.ItemsSource = temp;
+            }
+            else
+            {
+                labelGeburtstage.Content = "Alle Geburtstage:";
+
+                //Ausgabe aktualisieren
+                Trace.WriteLine("Ausgabe wird aktualisiert");
+                List<String> strings = listToString();
+                listView.ItemsSource = strings;
+            }
+        }
+
+        private void checkBox_Click(object sender, RoutedEventArgs e)
+        {
+            erstelleAusgabe();
+        }
+
+        private void Calendar_DisplayDateChanged(object sender, CalendarDateChangedEventArgs e)
+        {
+            erstelleAusgabe();
+        }
+
+        private String getMonatString(string s)
+        {
+            string monat = "";
+            switch (s)
+            {
+                case "01":
+                    monat = "Januar";
+                    break;
+                case "02":
+                    monat = "Februar";
+                    break;
+                case "03":
+                    monat = "März";
+                    break;
+                case "04":
+                    monat = "April";
+                    break;
+                case "05":
+                    monat = "Mai";
+                    break;
+                case "06":
+                    monat = "Juni";
+                    break;
+                case "07":
+                    monat = "Juli";
+                    break;
+                case "08":
+                    monat = "August";
+                    break;
+                case "09":
+                    monat = "September";
+                    break;
+                case "10":
+                    monat = "Oktober";
+                    break;
+                case "11":
+                    monat = "November";
+                    break;
+                case "12":
+                    monat = "Dezember";
+                    break;
+            }
+            return monat;
         }
     }
 }

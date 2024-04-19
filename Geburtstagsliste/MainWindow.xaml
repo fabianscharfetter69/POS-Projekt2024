@@ -11,10 +11,10 @@
             
             <Label HorizontalAlignment="Center" Margin="20" FontWeight="Bold" FontSize="20">Geburtstagsliste</Label>
      
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" MaxHeight="250">
 
 
-                <Calendar x:Name="Calendar" Margin="15" DisplayMode="Month" SelectionMode="SingleDate" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
+                <Calendar x:Name="Calendar" DisplayDateChanged="Calendar_DisplayDateChanged" Margin="15" DisplayMode="Month" SelectionMode="SingleDate" SelectedDatesChanged="Calendar_SelectedDatesChanged"/>
 
                 <StackPanel Orientation="Vertical" Margin="15">
                     <TextBlock x:Name="textBlockTag" MinWidth="170" HorizontalAlignment="Left" Margin="0,0,0,10" Text="Tag im Kalender auswählen" FontWeight="Bold"></TextBlock>
@@ -29,10 +29,22 @@
                     <Button x:Name="buttonName" Click="buttonName_Click" HorizontalAlignment="Left" Visibility="Hidden" Width="170" Margin="10">Hinzufügen</Button>
                 </StackPanel>
 
-                <ListView x:Name="listView" MouseDoubleClick="listView_MouseDoubleClick" MinWidth="200" Margin="15,0,0,0"/>
+                <StackPanel>
+                    <Label x:Name="labelGeburtstage" Margin="15,0,0,0">Alle Geburtstage:</Label>
+                    
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ListView Height="200" x:Name="listView" MouseDoubleClick="listView_MouseDoubleClick" MinWidth="200" Margin="15,0,0,0"/>
+                    </ScrollViewer>
+
+                    <CheckBox x:Name="checkBox"  HorizontalAlignment="Right" Content="Monats-Ansicht" Margin="0,10,10,0" Click="checkBox_Click"/>
+
+                </StackPanel>
+                
 
 
             </StackPanel>
+
+
         </StackPanel>
     </Grid>
 </Window>

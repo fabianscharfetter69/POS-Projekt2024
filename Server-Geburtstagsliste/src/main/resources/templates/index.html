@@ -27,9 +27,24 @@
             <li>Fr</li>
             <li>Sa</li>
         </ul>
-        <ul class="days" onclick="dayOnClick(event)"></ul>
+        <ul class="days"></ul>
     </div>
 </div>
+
+<!-- Geburtstagsliste -->
+<div id="birthdayList" class="birthday-list">
+    <h2 class="birthday-list-title">Alle Geburtstage</h2>
+    <div class="birthday-list-content">
+        <!-- Geburtstage werden hier dynamisch hinzugefügt -->
+    </div>
+</div>
+
+<!-- Buttons zum Umschalten der Geburtstagsliste -->
+<div class="buttons">
+    <button id="allButton" class="buttons">Alle Geburtstage anzeigen</button>
+    <button id="monthButton" class="buttons" >Geburtstage des aktuellen Monats anzeigen</button>
+</div>
+
 
 <form id="birthdayForm" class="popup-content" action="/newGeburtstag" method="POST">
     <span class="close">&times;</span>
@@ -39,7 +54,6 @@
     <button type="submit" id="submitBtn">Submit</button>
     <p id="errorMsg" class="error-message"></p>
 </form>
-
 
 </body>
 </html>

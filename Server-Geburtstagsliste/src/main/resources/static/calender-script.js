@@ -1,144 +1,156 @@
-const daysTag = document.querySelector(".days"),
-    currentDate = document.querySelector(".current-date"),
-    prevNextIcon = document.querySelectorAll(".icons span");
+document.addEventListener("DOMContentLoaded", function() {
+    const currentDateElement = document.querySelector('.current-date');
+    const daysListElement = document.querySelector('.days');
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
+    const birthdayListElement = document.querySelector('.birthday-list-content');
+    const allButton = document.getElementById('allButton');
+    const monthButton = document.getElementById('monthButton');
 
-let date = new Date(),
-    currYear = date.getFullYear(),
-    currMonth = date.getMonth();
+    // Aktuelles Datum erhalten
+    const currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth();
+    let currentDay = currentDate.getDate();
 
-const months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
-    "August", "September", "Oktober", "November", "Dezember"];
+    // Funktion zum Erstellen des Kalenders
+    function createCalendar(year, month) {
+        // Array mit den Namen der Wochentage
+        const daysOfWeek = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
-const renderCalendar = () => {
-    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), // getting first day of month
-        lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), // getting last date of month
-        lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), // getting last day of month
-        lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-    let liTag = "";
+        // Anzahl der Tage im vorherigen Monat
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-    for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
-        liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-    }
+        // Anzahl der Tage im aktuellen Monat
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    for (let i = 1; i <= lastDateofMonth; i++) { // creating li of all days of current month
-        let isToday = i === date.getDate() && currMonth === new Date().getMonth()
-        && currYear === new Date().getFullYear() ? "active" : "";
-        liTag += `<li class="${isToday}">${i}</li>`;
-    }
+        // Ersten Tag des Monats erhalten (0 = Sonntag, 1 = Montag, ...)
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
 
-    for (let i = lastDayofMonth; i < 6; i++) { // creating li of next month first days
-        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`
-    }
-    currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-    daysTag.innerHTML = liTag;
+        // Leeren des aktuellen Kalenders
+        daysListElement.innerHTML = '';
 
-    // Laden der Geburtstage beim Rendern des Kalenders
-    loadBirthdays();
-}
-renderCalendar();
-
-prevNextIcon.forEach(icon => { // getting prev and next icons
-    icon.addEventListener("click", () => { // adding click event on both icons
-        currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-
-        if(currMonth < 0 || currMonth > 11) {
-            date = new Date(currYear, currMonth, new Date().getDate());
-            currYear = date.getFullYear();
-            currMonth = date.getMonth();
-        } else {
-            date = new Date(); // pass the current date as date value
+        // Tage des vorherigen Monats hinzufügen
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = daysInPrevMonth - firstDayOfMonth + i + 1;
+            listItem.classList.add('day');
+            listItem.classList.add('inactive');
+            daysListElement.appendChild(listItem);
         }
-        renderCalendar(); // calling renderCalendar function
+
+        // Erstellen der Tage des aktuellen Monats
+        for (let i = 0; i < daysInMonth; i++) {
+            const dayOfWeek = (firstDayOfMonth + i) % 7; // Um den richtigen Wochentag zu erhalten
+            const listItem = document.createElement('li');
+            listItem.textContent = i + 1;
+            listItem.classList.add('day');
+            if (dayOfWeek === 0) {
+                listItem.classList.add('sunday');
+            }
+            if (i + 1 === currentDay && year === currentDate.getFullYear() && month === currentDate.getMonth()) {
+                listItem.classList.add('active');
+            }
+
+            daysListElement.appendChild(listItem);
+        }
+
+        // Tage des nächsten Monats hinzufügen, um die Woche abzuschließen
+        const remainingDays = 42 - (daysInMonth + firstDayOfMonth); // Maximal 42 Tage im Kalender
+        for (let i = 0; i < remainingDays; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = i + 1;
+            listItem.classList.add('day');
+            listItem.classList.add('inactive');
+            daysListElement.appendChild(listItem);
+        }
+
+        // Anzeigen des aktuellen Monats und Jahres
+        currentDateElement.textContent = `${month + 1}/${year}`;
+    }
+
+    // Funktion zum Anzeigen der Geburtstage
+    function displayBirthdays(birthdays) {
+        // Leeren der Liste, falls bereits vorhanden
+        birthdayListElement.innerHTML = '';
+
+        // Durch alle Geburtstage iterieren und sie der Liste hinzufügen
+        birthdays.forEach(birthday => {
+            const listItem = document.createElement('div');
+            listItem.classList.add('birthday-item');
+            listItem.textContent = `${birthday.name} - ${birthday.day}.${birthday.month}.${birthday.year}`;
+            birthdayListElement.appendChild(listItem);
+        });
+    }
+
+    // Kalender beim Laden der Seite erstellen
+    createCalendar(currentYear, currentMonth);
+
+    // Geburtstage von der API laden und alle anzeigen
+    fetch('http://localhost:8081/geb-liste/geburtstage')
+        .then(response => response.json())
+        .then(data => {
+            // Geburtstage anzeigen
+            displayBirthdays(data);
+        })
+        .catch(error => {
+            console.error('Error fetching birthdays:', error);
+        });
+
+    // Event Listener für vorherigen Monat
+    prevButton.addEventListener('click', function() {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        createCalendar(currentYear, currentMonth);
+    });
+
+    // Event Listener für nächsten Monat
+    nextButton.addEventListener('click', function() {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        createCalendar(currentYear, currentMonth);
+    });
+
+    // Event Listener für den "Alle Geburtstage anzeigen" Button
+    allButton.addEventListener('click', function() {
+        fetch('http://localhost:8081/geb-liste/geburtstage')
+            .then(response => response.json())
+            .then(data => {
+                // Geburtstage anzeigen
+                displayBirthdays(data);
+                document.querySelector('.birthday-list-title').textContent = 'Alle Geburtstage';
+            })
+            .catch(error => {
+                console.error('Error fetching birthdays:', error);
+            });
+    });
+
+    // Event Listener für den "Geburtstage des aktuellen Monats anzeigen" Button
+    monthButton.addEventListener('click', function() {
+        const currentMonthBirthdays = [];
+
+        fetch('http://localhost:8081/geb-liste/geburtstage')
+            .then(response => response.json())
+            .then(data => {
+                // Geburtstage des aktuellen Monats filtern
+                data.forEach(birthday => {
+                    if (parseInt(birthday.month) - 1 === currentMonth) {
+                        currentMonthBirthdays.push(birthday);
+                    }
+                });
+
+                // Geburtstage des aktuellen Monats anzeigen
+                displayBirthdays(currentMonthBirthdays);
+                document.querySelector('.birthday-list-title').textContent = 'Geburtstage des aktuellen Monats';
+            })
+            .catch(error => {
+                console.error('Error fetching birthdays:', error);
+            });
     });
 });
-
-
-
-
-
-const dayOnClick = (event) => {
-    const clickedDay = event.target;
-    const popup = document.getElementById("popup");
-
-    popup.style.display = "block";
-
-    const birthdayForm = document.getElementById("birthdayForm");
-    birthdayForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const dateInput = document.getElementById("dateInput").value;
-        document.getElementById("dateInput").value = null;
-        const nameInput = document.getElementById("nameInput").value;
-        document.getElementById("nameInput").value = null;
-        const errorMsg = document.getElementById("errorMsg");
-
-        if (isValidDate(dateInput)) {
-            clickedDay.classList.add("birthday");
-            clickedDay.innerHTML = `${nameInput}<br>${clickedDay.innerHTML}`;
-
-            popup.style.display = "none";
-        } else {
-            errorMsg.innerText = "Bitte geben Sie ein gültiges Datum ein.";
-        }
-    });
-
-    // Close the popup when clicking the close button
-    const closeBtn = document.querySelector(".close");
-    closeBtn.addEventListener("click", () => {
-        popup.style.display = "none";
-        resetForm();
-    });
-
-    // Close the popup when clicking outside of it
-    window.addEventListener("click", (event) => {
-        if (event.target == popup) {
-            popup.style.display = "none";
-            resetForm();
-        }
-    });
-};
-
-// Überprüfung der Gültigkeit des Datums
-const isValidDate = (date) => {
-    return !isNaN(Date.parse(date));
-};
-
-// Zurücksetzen des Formulars und der Fehlermeldung
-const resetForm = () => {
-    document.getElementById("birthdayForm").reset();
-    document.getElementById("errorMsg").innerText = "";
-};
-
-
-
-
-
-
-const url = 'http://localhost:8081/geb-liste/geburtstage';
-
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Fehler beim Abrufen der Daten:', error);
-        return [];
-    }
-}
-
-// Eine Funktion, um die erhaltenen Daten in eine Liste einzufügen
-async function createList() {
-    const data = await fetchData(url);
-    const list = document.createElement('ul');
-
-    // Schleife durch die Daten und Erstellen von Listenelementen für jeden Eintrag
-    data.forEach(item => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${item.name} - Geburtstag am ${item.day}.${item.month}.${item.year}`;
-        list.appendChild(listItem);
-    });
-
-    // Die Liste dem DOM hinzufügen
-    document.body.appendChild(list);
-}
