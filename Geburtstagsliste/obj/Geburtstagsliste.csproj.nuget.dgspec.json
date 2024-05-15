@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Fabian\\Desktop\\POS-Semesterprojekt2024\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj": {}
+    "C:\\Users\\fabia\\OneDrive\\Desktop\\project\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Fabian\\Desktop\\POS-Semesterprojekt2024\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj": {
+    "C:\\Users\\fabia\\OneDrive\\Desktop\\project\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Fabian\\Desktop\\POS-Semesterprojekt2024\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj",
+        "projectUniqueName": "C:\\Users\\fabia\\OneDrive\\Desktop\\project\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj",
         "projectName": "Geburtstagsliste",
-        "projectPath": "C:\\Users\\Fabian\\Desktop\\POS-Semesterprojekt2024\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj",
-        "packagesPath": "C:\\Users\\Fabian\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Fabian\\Desktop\\POS-Semesterprojekt2024\\POS-Projekt2024\\Geburtstagsliste\\obj\\",
+        "projectPath": "C:\\Users\\fabia\\OneDrive\\Desktop\\project\\POS-Projekt2024\\Geburtstagsliste\\Geburtstagsliste.csproj",
+        "packagesPath": "C:\\Users\\fabia\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\fabia\\OneDrive\\Desktop\\project\\POS-Projekt2024\\Geburtstagsliste\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Fabian\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\fabia\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -58,7 +63,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }

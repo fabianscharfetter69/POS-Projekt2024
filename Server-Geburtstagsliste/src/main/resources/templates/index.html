@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="icon" href="/calenderIcon.png" type="image/x-icon">
     <script src="/calender-script.js" defer></script>
 </head>
 <body>
@@ -34,24 +35,20 @@
 <!-- Geburtstagsliste -->
 <div id="birthdayList" class="birthday-list">
     <h2 class="birthday-list-title">Alle Geburtstage</h2>
-    <div class="birthday-list-content">
-        <!-- Geburtstage werden hier dynamisch hinzugefügt -->
+    <div class="birthday-list-content"></div>
+
+    <!-- Buttons zum Umschalten der Geburtstagsliste -->
+    <div class="buttons">
+        <button id="allButton" class="buttons">Alle Geburtstage anzeigen</button>
+        <button id="monthButton" class="buttons" >Geburtstage des aktuellen Monats anzeigen</button>
     </div>
 </div>
 
-<!-- Buttons zum Umschalten der Geburtstagsliste -->
-<div class="buttons">
-    <button id="allButton" class="buttons">Alle Geburtstage anzeigen</button>
-    <button id="monthButton" class="buttons" >Geburtstage des aktuellen Monats anzeigen</button>
-</div>
-
-
 <form id="birthdayForm" class="popup-content" action="/newGeburtstag" method="POST">
-    <span class="close">&times;</span>
     <p>Geburtstagskind hinzufügen:</p>
     <input type="date" id="dateInput" name="dateInput" required>
     <input type="text" id="nameInput" name="nameInput" placeholder="Name" required>
-    <button type="submit" id="submitBtn">Submit</button>
+    <button type="submit" id="submitBtn">Hinzufügen</button>
     <p id="errorMsg" class="error-message"></p>
 </form>
 

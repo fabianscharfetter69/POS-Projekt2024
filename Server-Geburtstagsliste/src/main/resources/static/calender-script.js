@@ -15,16 +15,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funktion zum Erstellen des Kalenders
     function createCalendar(year, month) {
-        // Array mit den Namen der Wochentage
         const daysOfWeek = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-
-        // Anzahl der Tage im vorherigen Monat
         const daysInPrevMonth = new Date(year, month, 0).getDate();
-
-        // Anzahl der Tage im aktuellen Monat
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        // Ersten Tag des Monats erhalten (0 = Sonntag, 1 = Montag, ...)
         const firstDayOfMonth = new Date(year, month, 1).getDay();
 
         // Leeren des aktuellen Kalenders
@@ -71,16 +64,42 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Funktion zum Anzeigen der Geburtstage
     function displayBirthdays(birthdays) {
-        // Leeren der Liste, falls bereits vorhanden
-        birthdayListElement.innerHTML = '';
+        birthdays.sort((a, b) => {
+            if (a.month !== b.month) {
+                return a.month - b.month;
+            }
+            return a.day - b.day;
+        });
 
-        // Durch alle Geburtstage iterieren und sie der Liste hinzufügen
+        birthdayListElement.innerHTML = '';
         birthdays.forEach(birthday => {
             const listItem = document.createElement('div');
             listItem.classList.add('birthday-item');
             listItem.textContent = `${birthday.name} - ${birthday.day}.${birthday.month}.${birthday.year}`;
             birthdayListElement.appendChild(listItem);
         });
+
+    }
+
+    function displayMonthBithdays(){
+        const currentMonthBirthdays = [];
+
+        fetch('http://localhost:8081/geb-liste/geburtstage')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(birthday => {              // Geburtstage des aktuellen Monats filtern
+                    if (parseInt(birthday.month) - 1 === currentMonth) {
+                        currentMonthBirthdays.push(birthday);
+                    }
+                });
+
+                // Geburtstage des aktuellen Monats anzeigen
+                displayBirthdays(currentMonthBirthdays);
+                document.querySelector('.birthday-list-title').textContent = 'Geburtstage in dem Monat';
+            })
+            .catch(error => {
+                console.error('Error fetching birthdays:', error);
+            });
     }
 
     // Kalender beim Laden der Seite erstellen
@@ -90,8 +109,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch('http://localhost:8081/geb-liste/geburtstage')
         .then(response => response.json())
         .then(data => {
-            // Geburtstage anzeigen
-            displayBirthdays(data);
+            displayBirthdays(data);             // Geburtstage anzeigen
         })
         .catch(error => {
             console.error('Error fetching birthdays:', error);
@@ -105,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function() {
             currentYear--;
         }
         createCalendar(currentYear, currentMonth);
+        displayMonthBithdays();
     });
 
     // Event Listener für nächsten Monat
@@ -115,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function() {
             currentYear++;
         }
         createCalendar(currentYear, currentMonth);
+        displayMonthBithdays();
     });
 
     // Event Listener für den "Alle Geburtstage anzeigen" Button
@@ -133,24 +153,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Event Listener für den "Geburtstage des aktuellen Monats anzeigen" Button
     monthButton.addEventListener('click', function() {
-        const currentMonthBirthdays = [];
-
-        fetch('http://localhost:8081/geb-liste/geburtstage')
-            .then(response => response.json())
-            .then(data => {
-                // Geburtstage des aktuellen Monats filtern
-                data.forEach(birthday => {
-                    if (parseInt(birthday.month) - 1 === currentMonth) {
-                        currentMonthBirthdays.push(birthday);
-                    }
-                });
-
-                // Geburtstage des aktuellen Monats anzeigen
-                displayBirthdays(currentMonthBirthdays);
-                document.querySelector('.birthday-list-title').textContent = 'Geburtstage des aktuellen Monats';
-            })
-            .catch(error => {
-                console.error('Error fetching birthdays:', error);
-            });
+        displayMonthBithdays();
     });
 });

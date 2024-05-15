@@ -12,10 +12,11 @@
       }
     ],
     "additionalProbingPaths": [
-      "C:\\Users\\Fabian\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Fabian\\.nuget\\packages"
+      "C:\\Users\\fabia\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\fabia\\.nuget\\packages"
     ],
     "configProperties": {
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": true,
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
     }
   }

@@ -4,11 +4,11 @@
 winexe
 C#
 .cs
-C:\Users\fabia\OneDrive\Desktop\project\POS-Projekt2024\Geburtstagsliste\obj\Debug\net7.0-windows\
+C:\Users\fabia\OneDrive\Desktop\project\POS-Projekt2024\Geburtstagsliste\obj\Release\net7.0-windows\
 Geburtstagsliste
 none
 false
-TRACE;DEBUG;NET;NET7_0;NETCOREAPP
+TRACE;RELEASE;NET;NET7_0;NETCOREAPP
 C:\Users\fabia\OneDrive\Desktop\project\POS-Projekt2024\Geburtstagsliste\App.xaml
 11407045341
 
@@ -16,5 +16,5 @@ C:\Users\fabia\OneDrive\Desktop\project\POS-Projekt2024\Geburtstagsliste\App.xam
 198650335325
 MainWindow.xaml;
 
-False
+True
 
