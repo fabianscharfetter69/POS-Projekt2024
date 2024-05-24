@@ -10,6 +10,8 @@
     <script src="/calender-script.js" defer></script>
 </head>
 <body>
+
+<!-- Kalender -->
 <div class="wrapper">
     <header>
         <p class="current-date"></p>
@@ -32,18 +34,19 @@
     </div>
 </div>
 
-<!-- Geburtstagsliste -->
+<!-- Fenster mit Geburtstagsliste -->
 <div id="birthdayList" class="birthday-list">
     <h2 class="birthday-list-title">Alle Geburtstage</h2>
     <div class="birthday-list-content"></div>
 
     <!-- Buttons zum Umschalten der Geburtstagsliste -->
     <div class="buttons">
-        <button id="allButton" class="buttons">Alle Geburtstage anzeigen</button>
-        <button id="monthButton" class="buttons" >Geburtstage des aktuellen Monats anzeigen</button>
+        <button id="allButton" class="buttons">Gesamtansicht</button>
+        <button id="monthButton" class="buttons" >Monatsansicht</button>
     </div>
 </div>
 
+<!-- Fenster zum Hinzufügen von Geburtstagen -->
 <form id="birthdayForm" class="popup-content" action="/newGeburtstag" method="POST">
     <p>Geburtstagskind hinzufügen:</p>
     <input type="date" id="dateInput" name="dateInput" required>
