@@ -142,7 +142,7 @@ Die Antwort wird überprüft, und je nachdem, ob die Operation erfolgreich war o
 
 Schließlich wird eine Weiterleitung zur Hauptseite der Website durchgeführt.</details>
 
-## Verwendung der API (ev. mit Code-Ausschnitten)
+## Verwendung der API
 
 <details>
   <Summary>MongoDB-Datenbank</summary>
