@@ -17,7 +17,7 @@ Die Anwendung besteht aus drei Hauptkomponenten:
 <details>
 <summary>Java-Server mit MongoDB-Datenbankanbindung</summary>  
    
-Der Java-Server fungiert als Backend der Anwendung. Er ist mit einer MongoDB-Datenbank verbunden, in der Geburtstagsdaten gespeichert werden. Der Server bietet folgende REST-API-Endpunkte zum Abrufen und Speichern von Geburtstagsinformationen. Server-Port ist 8081.  
+Der Java-Server fungiert als Backend der Anwendung. Er ist mit einer MongoDB-Datenbank verbunden, in der Geburtstagsdaten gespeichert werden. Der Server bietet folgende REST-API-Endpunkte zum Abrufen und Speichern von Geburtstagsinformationen. `Server-Port: 8081`  
 </details>
 
 <details>
@@ -28,7 +28,7 @@ Folgendermaßen ist die Seite aufgebaut:
   
 1) Kalender, der per JavaScript dynamisch geladen wird  
 2) Ausgabe-Feld, bei dem die vom Server geladenen Geburtsdaten angezeigt werden.    
-Die Geburtstage werden vom Server mit einem HTTP-Request (localhost:8081/geb-liste/geburtstage) geladen.      
+Die Geburtstage werden vom Server mit einem HTTP-Request `localhost:8081/geb-liste/geburtstage` geladen.      
 Die Website bietet 2 Anzeigemodi --> Alle Geburtstage werden angezeigt ODER Die Geburtstage in dem Monat, der gerade am Kalender angezeigt wird
 3) Eingabe-Feld, bei dem neue Geburtstage hinzugefügt werden können & mittels POST-Befehl an den Server geschickt werden
 </details>
@@ -74,7 +74,7 @@ Dieser Enpoint führt zur Methode "addGeburtstag()" und ermöglicht das Hinzufü
 
 <details>
   <summary>/geburtstage [POST]</summary>
-Ähnlich wie /geburtstag, aber hier können mehrere Geburtstage auf einmal hinzugefügt werden.
+Ähnlich wie `/geburtstag`, aber hier können mehrere Geburtstage auf einmal hinzugefügt werden.
 
 **JSON-Body:**
   ```json
@@ -121,14 +121,14 @@ Dieser Endpunkt ist ein GET-Endpunkt mit der URL "/geburtstage", der alle Geburt
 
 <details>
   <summary>/geburtstag/{id} [DELETE]</summary>
-Dieser Endpunkt ist ein DELETE-Endpunkt mit der URL "/geburtstag/{id}", der dazu dient, einen Geburtstag aus der MongoDB-Datenbank basierend auf der ID zu löschen. Die ID des zu löschenden Geburtstags wird aus dem Pfad der URL extrahiert. Die Methode "deleteGeburtstag" ruft die Methode "delete" des "geburtstagService" auf, um den Geburtstag zu löschen.
+Dieser Endpunkt ist ein DELETE-Endpunkt mit der URL `/geburtstag/{id}`, der dazu dient, einen Geburtstag aus der MongoDB-Datenbank basierend auf der ID zu löschen. Die ID des zu löschenden Geburtstags wird aus dem Pfad der URL extrahiert. Die Methode "deleteGeburtstag" ruft die Methode "delete" des "geburtstagService" auf, um den Geburtstag zu löschen.
 </details>
 
 ### WebController
 
 <details>
   <summary>/website</summary>
-Dieser Endpunkt ist ein GET-Endpunkt mit der URL "/website", der die Hauptseite der Website (index.html) zurückgibt.</details>
+Dieser Endpunkt ist ein GET-Endpunkt mit der URL '/website', der die Hauptseite der Website (index.html) zurückgibt.</details>
 
 <details>
   <summary>/newGeburtstag</summary>
@@ -136,7 +136,7 @@ Dieser Endpunkt wird aufgerufen, wenn ein neuer Geburtstag über das Formular au
    
 Die Methode teilt das Datum in seine Bestandteile auf (Tag, Monat, Jahr) und erstellt dann ein neues Geburtstagsobjekt damit. Dieses Geburtstagsobjekt wird dann in ein "GeburtstagDTO" (Data Transfer Object) umgewandelt.  
   
-Anschließend wird eine HTTP-POST-Anfrage an einen anderen Endpunkt des Servers gesendet, der den Geburtstag speichert. Die URL des Endpunkts ist "http://localhost:8081/geb-liste/geburtstag", und die Daten werden als "GeburtstagDTO" gesendet.  
+Anschließend wird eine HTTP-POST-Anfrage an einen anderen Endpunkt des Servers gesendet, der den Geburtstag speichert. Die URL des Endpunkts ist 'http://localhost:8081/geb-liste/geburtstag', und die Daten werden als "GeburtstagDTO" gesendet.  
   
 Die Antwort wird überprüft, und je nachdem, ob die Operation erfolgreich war oder nicht, werden entsprechende Meldungen ausgegeben.
 
@@ -148,7 +148,7 @@ Schließlich wird eine Weiterleitung zur Hauptseite der Website durchgeführt.</
   <Summary>MongoDB-Datenbank</summary>
 
   **Geburtstag hinzufügen:** So werden Geburtstage in der MongoDb-Datenbank gespeichert.  
-  URL: localhost:8081/geb-liste/geburtstag
+  URL: `localhost:8081/geb-liste/geburtstag`
 
   **Json-Body:**
   ```json
@@ -170,7 +170,7 @@ Schließlich wird eine Weiterleitung zur Hauptseite der Website durchgeführt.</
     }
   ```
 **Geburtstage abfragen:** So werden Geburtstage aus der MongoDb-Datenbank abgefragt.  
-  URL: localhost:8081/geb-liste/geburtstage
+  URL: `localhost:8081/geb-liste/geburtstage`
 
   **Rückgabe:**
   ```json
@@ -193,7 +193,7 @@ Schließlich wird eine Weiterleitung zur Hauptseite der Website durchgeführt.</
   ```
 
 **Geburtstag löschen:** So werden Geburtstage gelöscht.  
-  URL: localhost:8081/geb-liste/geburtstag/{id}  bzw. localhost:8081/geb-liste/geburtstag/665c4bfe168b7b0269b2e86c
+  URL: `localhost:8081/geb-liste/geburtstag/{id}`  bzw. `localhost:8081/geb-liste/geburtstag/665c4bfe168b7b0269b2e86c`
   
   **Rückgabe bei Erfolg (Anzahl der gelöschten Objekte):**
   ```json
