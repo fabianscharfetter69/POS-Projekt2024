@@ -59,6 +59,7 @@ Dieser Endpunkt ist der generelle Endpoint der API, welcher vor dem jeweiligen s
 
 <details>
   <summary>/geburtstag [POST]</summary>
+ 
 Dieser Enpoint führt zur Methode "addGeburtstag()" und ermöglicht das Hinzufügen von Geburtstagen in die MongoDB-Datenbank auf dem Server. Er nimmt einen Geburtstag im JSON-Format entgegen und speichert ihn mithilfe des "geburtstagService" und gibt das gespeicherte Geburtstagsobjekt zurück.
  
 **JSON-Body:**
@@ -74,6 +75,7 @@ Dieser Enpoint führt zur Methode "addGeburtstag()" und ermöglicht das Hinzufü
 
 <details>
   <summary>/geburtstage [POST]</summary>
+ 
 Ähnlich wie `/geburtstag`, aber hier können mehrere Geburtstage auf einmal hinzugefügt werden.
 
 **JSON-Body:**
@@ -98,6 +100,7 @@ Dieser Enpoint führt zur Methode "addGeburtstag()" und ermöglicht das Hinzufü
 <details>
   <summary>/geburtstage [GET]</summary>
 Dieser Endpunkt ist ein GET-Endpunkt mit der URL "/geburtstage", der alle Geburtstage aus der MongoDB-Datenbank abruft. Er ruft die Methode "findAll" auf, um eine Liste aller Geburtstage zu erhalten, und gibt sie zurück.
+ 
 **JSON-Body:**
   ```json
   [
@@ -136,7 +139,7 @@ Dieser Endpunkt wird aufgerufen, wenn ein neuer Geburtstag über das Formular au
    
 Die Methode teilt das Datum in seine Bestandteile auf (Tag, Monat, Jahr) und erstellt dann ein neues Geburtstagsobjekt damit. Dieses Geburtstagsobjekt wird dann in ein "GeburtstagDTO" (Data Transfer Object) umgewandelt.  
   
-Anschließend wird eine HTTP-POST-Anfrage an einen anderen Endpunkt des Servers gesendet, der den Geburtstag speichert. Die URL des Endpunkts ist 'http://localhost:8081/geb-liste/geburtstag', und die Daten werden als "GeburtstagDTO" gesendet.  
+Anschließend wird eine HTTP-POST-Anfrage an einen anderen Endpunkt des Servers gesendet, der den Geburtstag speichert. Die URL des Endpunkts ist `http://localhost:8081/geb-liste/geburtstag`, und die Daten werden als "GeburtstagDTO" gesendet.  
   
 Die Antwort wird überprüft, und je nachdem, ob die Operation erfolgreich war oder nicht, werden entsprechende Meldungen ausgegeben.
 
